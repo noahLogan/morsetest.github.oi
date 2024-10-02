@@ -34,9 +34,9 @@ function vibrateMorse(morse) {
         letters.forEach((letter, letterIndex) => {
             letter.split('').forEach((char, charIndex) => {
                 if (char === '.') {
-                    vibratePattern.push(1000); // la duración de un punto es de 1 segundo
+                    vibratePattern.push(100); // la duración de un punto es de 1 segundo
                 } else if (char === '-') {
-                    vibratePattern.push(3000); // la duración de una raya es de 3 segundos
+                    vibratePattern.push(300); // la duración de una raya es de 3 segundos
                 }
 
                 // pausa de 1 segundo entre los símbolos de la misma letra (-- ..) 
