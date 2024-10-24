@@ -1,0 +1,447 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Montserrat';
+}
+
+.flex {
+    display: flex;
+}
+
+#result {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
+input {
+    width: 280px;
+}
+  
+/* Menú */
+nav {
+    display: flex;
+    justify-content: space-between;
+
+    align-items: center;
+    padding: 10px 40px;
+    color: #ff9d00;
+    border-bottom: 1px solid #ddd;
+    background-color: #fff;
+    position: fixed;
+    width: 95%;
+}
+  
+.menu-icon {
+    display: none;
+    cursor: pointer;
+}
+  
+.menu-icon .bar {
+    width: 25px;
+    height: 3px;
+    background-color: #000;
+    margin: 4px 0;
+    transition: all 0.3s ease;
+}
+  
+#menu {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+  
+#menu li {
+    display: inline;
+    margin: auto;
+}
+
+.MorseCode {
+    color: #ff9d00;
+    font-weight: 900;
+    font-size: 40px;
+    text-decoration: none;
+    font-family: 'Courier New', Courier, monospace;
+}
+  
+#menu li a {
+    color: #ff9d00;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    margin: auto;
+    font-size: 20px;
+    font-weight: 300;
+    padding-left: 50px;
+    transition: font-weight 0.1s ease;
+}
+#menu li a:hover {
+    font-weight: 800;
+}
+#menu .active-item {
+    font-weight: 800;
+}
+  
+.change .bar:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+  
+.change .bar:nth-child(2) {
+    opacity: 0;
+}
+  
+.change .bar:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Apartado de aprendizaje */
+main {
+    font-family: 'Courier New', Courier, monospace;
+    padding: 100px 40px 60px 40px;
+    background-color: #fdfefe;
+    border-radius: 50px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 0 20px 0;
+}
+
+.info-learn {
+    gap: 30px;
+}
+.info-learn h2 {
+    font-size: clamp(1.25rem, 0.7813rem + 1.5vw, 1.625rem);
+    padding: 0 0 15px 0;
+}
+.info-learn h3 {
+    font-size: clamp(1rem, 0.6875rem + 1vw, 1.25rem);
+    padding: 30px 0 15px 0;
+    text-align: center;
+}
+.info-learn p {
+    font-size: clamp(0.875rem, 0.4063rem + 1.5vw, 1.25rem);
+}
+
+.info-abc {
+    background-color: #fbfcfc;
+    padding: 30px 40px 60px 40px;
+}
+
+.container {
+    width: 50%;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+th, td {
+    padding: 12px 20px;
+}
+
+th {
+    background-color: #ff9d00;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(odd) {
+    background-color: #fafafa;
+}
+
+td {
+    font-size: 18px;
+    color: #333;
+}
+
+.info-rules {
+    background: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.p--number {
+    background-color: #e68a00;
+    width: 25px;
+    min-width: 20px;
+    height: 25px;
+    min-height: 10px;
+    border-radius: 50%;
+    color: #fff;
+    font-size: clamp(0.875rem, 0.4063rem + 1.5vw, 1.25rem);
+    text-align: center;
+}
+
+.container-general {
+    display: flex;
+    gap: 10px;
+}
+
+
+/* Estilos de Traductor */
+.translate-container {
+    padding: 100px 40px;
+    background: #f4f6f7;
+}
+
+#morseForm {
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    margin: 20px auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#morseForm label {
+    font-size: 1rem;
+    color: #333;
+    display: block;
+    margin-bottom: 10px;
+}
+
+#morseForm input[type="text"] {
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    transition: border 0.3s ease-in-out;
+}
+
+#morseForm input[type="text"]:focus {
+    outline: none;
+    border-color: #ff9d00;
+}
+
+#morseForm button[type="submit"] {
+    background-color: #ff9d00;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+#morseForm button[type="submit"]:hover {
+    background-color: #e68a00;
+}
+
+#result {
+    margin-top: 20px;
+    font-size: 1.1rem;
+    color: #333;
+    text-align: center;
+}
+
+#vibrateButton {
+    background-color: #ff9d00;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    max-width: 400px;
+    display: block;
+    margin: 10px auto;
+    transition: background-color 0.3s ease;
+}
+
+#vibrateButton:hover {
+    background-color: #e68a00;
+}
+
+/* GAME EASY */
+.card {
+    font-size: 2.5rem;
+    padding: 20px;
+    border: 2px solid #333;
+    border-radius: 10px;
+    background-color: #fff;
+    display: inline-block;
+    margin-bottom: 20px;
+    min-width: 200px;
+}
+.options button {
+    font-size: 1.2rem;
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #ff9d00;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+.options button:hover {
+    background-color: #b36e00;
+}
+.score, .round {
+    font-size: 1.5rem;
+    margin-top: 20px;
+}
+#resetBtn {
+    margin-top: 30px;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #28A745;
+    color: #fff;
+    transition: background-color 0.3s;
+    display: none;
+}
+#resetBtn:hover {
+    background-color: #1e7e34;
+}
+
+/* INTERMEDIATE */
+
+
+
+
+
+/* Media Queries */
+@media (min-width: 1024px) {
+    #morseForm {
+        max-width: 50%;
+        padding: 30px;
+    }
+
+    #morseForm input[type="text"],
+    #morseForm button[type="submit"],
+    #vibrateButton {
+        font-size: 1.1rem;
+        padding: 12px 18px;
+    }
+
+    #result {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+    }
+
+    td {
+        font-size: 16px;
+    }
+
+    #morseForm {
+        max-width: 90%;
+        padding: 15px;
+    }
+
+    #morseForm label {
+        font-size: 0.95rem;
+    }
+
+    #morseForm input[type="text"],
+    #morseForm button[type="submit"],
+    #vibrateButton {
+        font-size: 0.95rem;
+        padding: 8px 12px;
+    }
+
+    #result {
+        font-size: 1rem;
+    }
+}
+  
+@media (max-width: 695px) {
+    .menu-icon {
+        display: block;
+    }
+
+    #menu {
+        display: none;
+        position: absolute;
+        top: 50px;
+        right: 20px;
+        background-color: #333;
+        width: 200px;
+        flex-direction: column;
+    }
+
+    #menu.open {
+        display: flex;
+    }
+
+    #menu li {
+        margin-left: 0;
+        display: block;
+    }
+
+    #menu li a {
+        padding: 15px;
+        border-bottom: 1px solid #555;
+    }
+
+    .MorseCode {
+        margin: auto;
+        font-size: 20px;
+    }
+
+    #menu li a {
+        font-size: 16px;
+    }
+
+    .info-learn {
+        gap: 30px;
+        flex-direction: column;
+        text-align: center;
+    }
+    .info-learn img {
+        width: 200px;
+        height: 150px;
+        margin: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    #morseForm {
+        max-width: 95%;
+        padding: 10px;
+    }
+
+    #morseForm label {
+        font-size: 0.85rem;
+    }
+
+    #morseForm input[type="text"],
+    #morseForm button[type="submit"],
+    #vibrateButton {
+        font-size: 0.85rem;
+        padding: 8px 10px;
+    }
+
+    #result {
+        font-size: 0.9rem;
+    }
+}
+
