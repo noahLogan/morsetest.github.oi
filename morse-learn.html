@@ -167,17 +167,28 @@
             const dotDuration = 200;
             const dashDuration = 600;
             let delay = 0;
-
+        
             morse.split('').forEach(symbol => {
                 if (symbol === '.') {
-                    setTimeout(() => new Audio('dot-sound.mp3').play(), delay);
+                    setTimeout(() => {
+                        const dotSound = new Audio('assets/audio/dot-sound.mp3'); // Asegúrate de que esta ruta es correcta
+                        dotSound.play().catch(error => {
+                            console.error("Error al reproducir dot-sound.mp3:", error);
+                        });
+                    }, delay);
                     delay += dotDuration + 200;
                 } else if (symbol === '-') {
-                    setTimeout(() => new Audio('dash-sound.mp3').play(), delay);
+                    setTimeout(() => {
+                        const dashSound = new Audio('assets/audio/dash-sound.mp3'); // Asegúrate de que esta ruta es correcta
+                        dashSound.play().catch(error => {
+                            console.error("Error al reproducir dash-sound.mp3:", error);
+                        });
+                    }, delay);
                     delay += dashDuration + 200;
                 }
             });
         }
+
     </script>
 
     <script src="assets/js/translate.js"></script>
