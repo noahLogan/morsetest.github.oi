@@ -143,21 +143,27 @@
         });
 
         function playVibration() {
-            const character = characters[currentCharacterIndex];
-            const morse = morseCode[currentType][character];
-            const vibrationPattern = [];
-
-            for (const symbol of morse) {
-                if (symbol === '.') {
-                    vibrationPattern.push(200); // Punto
-                } else if (symbol === '-') {
-                    vibrationPattern.push(600); // Raya
-                }
-                vibrationPattern.push(200); // Pausa entre pulsos
-            }
-
+            // Verifica que la vibración sea compatible y que sea un dispositivo móvil
             if (navigator.vibrate) {
-                navigator.vibrate(vibrationPattern);
+                const character = characters[currentCharacterIndex];
+                const morse = morseCode[currentType][character];
+                const vibrationPattern = [];
+        
+                for (const symbol of morse) {
+                    if (symbol === '.') {
+                        vibrationPattern.push(200); // Punto
+                    } else if (symbol === '-') {
+                        vibrationPattern.push(600); // Raya
+                    }
+                    vibrationPattern.push(200); // Pausa entre pulsos
+                }
+        
+                // Asegúrate de que esto se dispare después de la interacción del usuario
+                if (window.innerWidth <= 768) { // Solo se muestra en pantallas móviles
+                    document.getElementById('vibrateButton').addEventListener('click', () => {
+                        navigator.vibrate(vibrationPattern);
+                    });
+                }
             } else {
                 alert("La vibración no es compatible en este dispositivo.");
             }
