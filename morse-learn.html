@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MorseCode</title>
+    <link rel="stylesheet" href="assets/css/global.css">
+    <style>
+        .output {
+            font-size: clamp(0.875rem, 0.5625rem + 1vw, 1.125rem);
+            margin: 30px auto 0 auto;
+            background-color: #fff;
+            padding: 5px 15px;
+            border-radius: 15px;
+        }
+        .carousel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .carousel button {
+            background-color: transparent;
+            border: none;
+        }
+        .letter-display {
+            font-size: 3em;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+        }
+        #vibrateButton {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            #vibrateButton {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="menu-icon" id="menu-icon" onclick="toggleMenu()">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <a href="index.html" class="MorseCode">MoreMorse</a>
+            <ul id="menu" class="hidden">
+                <li><a href="index.html" class="menu__option active-item">Aprender</a></li>
+                <li><a href="translate.html" class="menu__option">Traducir</a></li>
+                <li><a href="game-easy.html" class="menu__option">Jugar</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="learning-container">
+        <h1>Aprende Código Morse</h1>
+        <p>Elige entre los botones "Letras" si quieres aprender el abecedario, "Números" si quieres aprender los números. Usa las flechas para seleccionar una letra o número y presiona el botón para escuchar su código Morse.</p>
+
+        <!-- Menú para seleccionar entre letras y números -->
+        <div class="button-learning-container button-learning-container__option">
+            <button class="option__button" name="type" value="letters" onclick="switchType('letters')" checked>
+                Letras
+            </button>
+            <button name="type" value="numbers" onclick="switchType('numbers')">
+                Números
+            </button>
+        </div>
+
+        <div class="carousel" aria-label="Carrusel de caracteres en código Morse">
+            <button class="arrow-btn" onclick="prevCharacter()" aria-label="Anterior">
+                <img src="assets/icons/left.svg" alt="Anterior">
+            </button>
+            <div class="letter-display" id="character-display">A</div>
+            <button class="arrow-btn" onclick="nextCharacter()" aria-label="Siguiente">
+                <img src="assets/icons/right.svg" alt="Siguiente">
+            </button>
+        </div>
+
+        <div class="button-learning-container">
+            <button onclick="playMorseSound()">Reproducir Sonido Código Morse</button>
+            <button id="vibrateButton" onclick="playVibration()">Activar Vibración</button>
+            <div class="output" id="output" aria-live="polite"></div>
+        </div>
+    </div>
+
+    <script>
+        // Diccionario de código Morse
+        const morseCode = {
+            letters: {
+                'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.',
+                'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.',
+                'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-', 'U': '..-',
+                'V': '...-', 'W': '.--', 'X': '-..-', 'Y': '-.--', 'Z': '--..'
+            },
+            numbers: {
+                '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-', '5': '.....',
+                '6': '-....', '7': '--...', '8': '---..', '9': '----.'
+            }
+        };
+
+        let currentType = 'letters'; // Tipo actual (letras o números)
+        let characters = Object.keys(morseCode[currentType]);
+        let currentCharacterIndex = 0;
+
+        function updateCharacterDisplay() {
+            const character = characters[currentCharacterIndex];
+            document.getElementById('character-display').textContent = character;
+            document.getElementById('output').innerHTML = `<strong>Carácter:</strong> ${character} <br> <strong>Código Morse:</strong> ${morseCode[currentType][character]}`;
+        }
+
+        function nextCharacter() {
+            currentCharacterIndex = (currentCharacterIndex + 1) % characters.length;
+            updateCharacterDisplay();
+        }
+
+        function prevCharacter() {
+            currentCharacterIndex = (currentCharacterIndex - 1 + characters.length) % characters.length;
+            updateCharacterDisplay();
+        }
+
+        function switchType(type) {
+            currentType = type;
+            characters = Object.keys(morseCode[currentType]);
+            currentCharacterIndex = 0; // Reinicia el índice
+            updateCharacterDisplay();
+        }
+
+        function playMorseSound() {
+            const character = characters[currentCharacterIndex];
+            const morse = morseCode[currentType][character];
+            playMorseAudio(morse);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            if (window.innerWidth <= 768 && 'vibrate' in navigator) {
+                document.getElementById('vibrateButton').style.display = 'inline-block';
+            }
+            updateCharacterDisplay(); // Inicializa la vista
+        });
+
+        function playVibration() {
+            const character = characters[currentCharacterIndex];
+            const morse = morseCode[currentType][character];
+            const vibrationPattern = [];
+
+            for (const symbol of morse) {
+                if (symbol === '.') {
+                    vibrationPattern.push(200); // Punto
+                } else if (symbol === '-') {
+                    vibrationPattern.push(600); // Raya
+                }
+                vibrationPattern.push(200); // Pausa entre pulsos
+            }
+
+            if (navigator.vibrate) {
+                navigator.vibrate(vibrationPattern);
+            } else {
+                alert("La vibración no es compatible en este dispositivo.");
+            }
+        }
+
+        function playMorseAudio(morse) {
+            const dotDuration = 200;
+            const dashDuration = 600;
+            let delay = 0;
+
+            morse.split('').forEach(symbol => {
+                if (symbol === '.') {
+                    setTimeout(() => {
+                        const dotSound = new Audio('assets/audio/dot-sound.ogg'); // Asegúrate de que esta ruta es correcta
+                        dotSound.play().catch(error => {
+                            console.error("Error al reproducir dot-sound.ogg:", error);
+                        });
+                    }, delay);
+                    delay += dotDuration + 200;
+                } else if (symbol === '-') {
+                    setTimeout(() => {
+                        const dashSound = new Audio('assets/audio/dash-sound.ogg'); // Asegúrate de que esta ruta es correcta
+                        dashSound.play().catch(error => {
+                            console.error("Error al reproducir dash-sound.ogg:", error);
+                        });
+                    }, delay);
+                    delay += dashDuration + 200;
+                }
+            });  
+        }
+    </script>
+
+    <script src="assets/js/translate.js"></script>
+    <script src="assets/js/menu.js"></script>
+</body>
+</html>
