@@ -145,6 +145,8 @@
         function playVibration() {
             // Verifica que la vibración sea compatible y que sea un dispositivo móvil
             if (navigator.vibrate) {
+                navigator.vibrate(0);
+                
                 const character = characters[currentCharacterIndex];
                 const morse = morseCode[currentType][character];
                 const vibrationPattern = [];
