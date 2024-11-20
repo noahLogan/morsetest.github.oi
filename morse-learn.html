@@ -171,30 +171,69 @@
             }
         }
 
+        //  Audio
+        // Detecta el sistema operativo
+        function getAudioFormat() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+            if (/android/i.test(userAgent)) {
+                return 'ogg'; // Formato para Android
+            } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                return 'mp3'; // Formato para iOS
+            } else {
+                return 'ogg'; // Por defecto usa 'ogg'
+            }
+        }
+
+        // Variables de audio para dot y dash
+        let dotSound, dashSound;
+        const audioFormat = getAudioFormat();
+
+        function initializeAudio() {
+            // Cargar el formato adecuado según el sistema operativo
+            dotSound = new Audio(`assets/audio/dot-sound.${audioFormat}`);
+            dashSound = new Audio(`assets/audio/dash-sound.${audioFormat}`);
+
+            dotSound.load();
+            dashSound.load();
+
+            // Reproducir un sonido vacío para asegurar que están listos en iOS
+            dotSound.play().then(() => {
+                dotSound.pause();
+                dotSound.currentTime = 0;
+            });
+            dashSound.play().then(() => {
+                dashSound.pause();
+                dashSound.currentTime = 0;
+            });
+
+            alert("Audio inicializado. Ahora puedes reproducir los sonidos.");
+        }
+
         function playMorseAudio(morse) {
             const dotDuration = 200;
             const dashDuration = 600;
             let delay = 0;
 
-            morse.split('').forEach(symbol => {
+                morse.split('').forEach(symbol => {
                 if (symbol === '.') {
                     setTimeout(() => {
-                        const dotSound = new Audio('assets/audio/dot-sound.ogg'); // Asegúrate de que esta ruta es correcta
+                        dotSound.currentTime = 0; // Reinicia el audio
                         dotSound.play().catch(error => {
-                            console.error("Error al reproducir dot-sound.ogg:", error);
+                            console.error(`Error al reproducir dot-sound.${audioFormat}:`, error);
                         });
                     }, delay);
                     delay += dotDuration + 200;
                 } else if (symbol === '-') {
                     setTimeout(() => {
-                        const dashSound = new Audio('assets/audio/dash-sound.ogg'); // Asegúrate de que esta ruta es correcta
+                        dashSound.currentTime = 0; // Reinicia el audio
                         dashSound.play().catch(error => {
-                            console.error("Error al reproducir dash-sound.ogg:", error);
+                            console.error(`Error al reproducir dash-sound.${audioFormat}:`, error);
                         });
                     }, delay);
                     delay += dashDuration + 200;
                 }
-            });  
+            });
         }
     </script>
 
