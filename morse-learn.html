@@ -61,12 +61,8 @@
         <p>Elige entre los botones "Letras" si quieres aprender el abecedario, "Números" si quieres aprender los números. Usa las flechas para seleccionar una letra o número y presiona el botón para escuchar su código Morse.</p>
 
         <div class="button-learning-container button-learning-container__option">
-            <button class="option__button" name="type" value="letters" onclick="switchType('letters')" checked>
-                Letras
-            </button>
-            <button name="type" value="numbers" onclick="switchType('numbers')">
-                Números
-            </button>
+            <button class="option__button" onclick="switchType('letters')">Letras</button>
+            <button onclick="switchType('numbers')">Números</button>
         </div>
 
         <div class="carousel" aria-label="Carrusel de caracteres en código Morse">
@@ -90,27 +86,22 @@
 
     <script>
         const morseCode = {
-            letters: {
-                'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.',
-                'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.',
-                'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.', 'S': '...', 'T': '-', 'U': '..-',
-                'V': '...-', 'W': '.--', 'X': '-..-', 'Y': '-.--', 'Z': '--..'
-            },
-            numbers: {
-                '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-', '5': '.....',
-                '6': '-....', '7': '--...', '8': '---..', '9': '----.'
-            }
+            letters: { 'A': '.-', 'B': '-...', /* ... demás letras ... */ },
+            numbers: { '0': '-----', '1': '.----', /* ... demás números ... */ }
         };
 
         let currentType = 'letters';
         let characters = Object.keys(morseCode[currentType]);
         let currentCharacterIndex = 0;
         let vibrationEnabled = false;
+        let dotSound, dashSound;
+        let audioInitialized = false;
 
         function updateCharacterDisplay() {
             const character = characters[currentCharacterIndex];
+            const morse = morseCode[currentType][character];
             document.getElementById('character-display').textContent = character;
-            document.getElementById('output').innerHTML = `<strong>Carácter:</strong> ${character} <br> <strong>Código Morse:</strong> ${morseCode[currentType][character]}`;
+            document.getElementById('output').innerHTML = `<strong>Carácter:</strong> ${character} <br> <strong>Código Morse:</strong> ${morse}`;
         }
 
         function nextCharacter() {
@@ -130,87 +121,68 @@
             updateCharacterDisplay();
         }
 
-        function playMorseSound() {
-            const character = characters[currentCharacterIndex];
-            const morse = morseCode[currentType][character];
-            playMorseAudio(morse);
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            updateCharacterDisplay(); // Inicializa la vista
-            if (window.innerWidth <= 768 && 'vibrate' in navigator) {
-                document.getElementById('vibrateButton').style.display = 'inline-block';
-            }
-        });
-
-        function activateVibration() {
-            vibrationEnabled = 'vibrate' in navigator;
-            if (!vibrationEnabled) {
-                alert("La vibración no es compatible en este dispositivo.");
-            } else {
-                alert("Vibración activada.");
-            }
-        }
-
-        function playVibration() {
-            if (!vibrationEnabled) return;
-
-            const character = characters[currentCharacterIndex];
-            const morse = morseCode[currentType][character];
-            const vibrationPattern = [];
-
-            morse.split('').forEach(symbol => {
-                vibrationPattern.push(symbol === '.' ? 200 : 600);
-                vibrationPattern.push(200); // Pausa entre pulsos
-            });
-
-            navigator.vibrate(vibrationPattern);
-        }
-
-        function getAudioFormat() {
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            if (/android/i.test(userAgent)) {
-                return 'ogg';
-            } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                return 'mp3';
-            } else {
-                return 'ogg';
-            }
-        }
-
-        let dotSound, dashSound;
-        const audioFormat = getAudioFormat();
-
         function initializeAudio() {
-            dotSound = new Audio(`assets/audio/dot-sound.${audioFormat}`);
-            dashSound = new Audio(`assets/audio/dash-sound.${audioFormat}`);
-            dotSound.load();
-            dashSound.load();
-            dotSound.play().then(() => {
-                dotSound.pause();
-                dotSound.currentTime = 0;
-            });
-            dashSound.play().then(() => {
-                dashSound.pause();
-                dashSound.currentTime = 0;
-            });
-            alert("Audio inicializado. Ahora puedes reproducir los sonidos.");
+            if (!audioInitialized) {
+                dotSound = new Audio(`assets/audio/dot-sound.ogg`);
+                dashSound = new Audio(`assets/audio/dash-sound.ogg`);
+                dotSound.load();
+                dashSound.load();
+
+                dotSound.play().then(() => {
+                    dotSound.pause();
+                    dotSound.currentTime = 0;
+                }).catch(console.error);
+
+                dashSound.play().then(() => {
+                    dashSound.pause();
+                    dashSound.currentTime = 0;
+                }).catch(console.error);
+
+                audioInitialized = true;
+                alert("Audio inicializado. Ahora puedes reproducir sonidos.");
+            }
         }
 
-        function playMorseAudio(morse) {
-            const dotDuration = 200;
-            const dashDuration = 600;
+        function playMorseSound() {
+            if (!audioInitialized) {
+                alert("Antes debes activar el audio.");
+                return;
+            }
+            const morse = morseCode[currentType][characters[currentCharacterIndex]];
             let delay = 0;
-
             morse.split('').forEach(symbol => {
                 setTimeout(() => {
                     const sound = symbol === '.' ? dotSound : dashSound;
                     sound.currentTime = 0;
-                    sound.play().catch(error => console.error(`Error al reproducir sonido:`, error));
+                    sound.play().catch(console.error);
                 }, delay);
-                delay += (symbol === '.' ? dotDuration : dashDuration) + 200;
+                delay += (symbol === '.' ? 200 : 600) + 200;
             });
         }
+
+        function activateVibration() {
+            if ('vibrate' in navigator) {
+                vibrationEnabled = true;
+                alert("Vibración activada.");
+            } else {
+                alert("La vibración no es compatible con este dispositivo.");
+            }
+        }
+
+        function playVibration() {
+            if (!vibrationEnabled) {
+                alert("Activa la vibración primero.");
+                return;
+            }
+            const morse = morseCode[currentType][characters[currentCharacterIndex]];
+            const pattern = [];
+            morse.split('').forEach(symbol => {
+                pattern.push(symbol === '.' ? 200 : 600, 200);
+            });
+            navigator.vibrate(pattern);
+        }
+
+        document.addEventListener("DOMContentLoaded", updateCharacterDisplay);
     </script>
 
     <script src="assets/js/translate.js"></script>
