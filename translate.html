@@ -114,18 +114,41 @@
 
         function vibrateMorse(morse) {
             const vibratePattern = [];
-            morse.split('   ').forEach((word, wordIndex) => {
-                word.split(' ').forEach((letter, letterIndex) => {
-                    letter.split('').forEach((char) => {
-                        vibratePattern.push(char === '.' ? 200 : 600);
-                        vibratePattern.push(200); // Pausa entre símbolos
+            const words = morse.split('   '); // Separar palabras (3 espacios en Morse)
+        
+            words.forEach((word, wordIndex) => {
+                const letters = word.split(' '); // Separar letras (1 espacio en Morse)
+        
+                letters.forEach((letter, letterIndex) => {
+                    letter.split('').forEach((char, charIndex) => {
+                        if (char === '.') {
+                            vibratePattern.push(200); // Punto: vibración corta
+                        } else if (char === '-') {
+                            vibratePattern.push(600); // Raya: vibración larga
+                        }
+        
+                        // Pausa solo si no es el último símbolo de la letra
+                        if (charIndex < letter.length - 1) {
+                            vibratePattern.push(200); // Pausa entre símbolos
+                        }
                     });
-                    vibratePattern.push(600); // Pausa entre letras
+        
+                    // Pausa entre letras, pero no después de la última letra
+                    if (letterIndex < letters.length - 1) {
+                        vibratePattern.push(600);
+                    }
                 });
-                vibratePattern.push(1400); // Pausa entre palabras
+        
+                // Pausa entre palabras, pero no después de la última palabra
+                if (wordIndex < words.length - 1) {
+                    vibratePattern.push(1400);
+                }
             });
+        
+            // Iniciar el patrón de vibración
             navigator.vibrate(vibratePattern);
         }
+
 
         document.getElementById('vibrateButton').addEventListener('click', function() {
             const morseResult = document.getElementById('result').innerText.replace('Traducción en Morse: ', '');
